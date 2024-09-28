@@ -31,7 +31,7 @@ final class WriteBalanceCommand extends BaseCommand
         }
 
         try {
-            WriteBalanceJob::dispatchSync($user, $this->argument('amount'));
+            WriteBalanceJob::dispatch($user, $this->argument('amount'));
         } catch (Throwable $e) {
             Log::error(WriteBalanceJob::ERROR, [
                 'error_message' => $e->getMessage(),

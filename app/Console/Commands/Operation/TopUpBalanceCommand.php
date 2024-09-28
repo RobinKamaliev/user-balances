@@ -31,7 +31,7 @@ final class TopUpBalanceCommand extends BaseCommand
         }
 
         try {
-            TopUpBalanceJob::dispatchSync($user, $this->argument('amount'));
+            TopUpBalanceJob::dispatch($user, $this->argument('amount'));
         } catch (Throwable $e) {
             Log::error(TopUpBalanceJob::ERROR, [
                 'error_message' => $e->getMessage(),

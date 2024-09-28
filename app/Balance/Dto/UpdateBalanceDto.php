@@ -10,7 +10,7 @@ use App\Dto\Dto;
 /**
  * Дто на изменение баланса.
  */
-class UpdateBalanceDto extends Dto
+final class UpdateBalanceDto extends Dto
 {
     protected Balance $balance;
 

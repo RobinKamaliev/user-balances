@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Console\Commands\User;
 
 use App\Console\Commands\BaseCommand;
-use App\Http\Requests\User\RegisterRequest;
 use App\User\Services\CreateUserService;
 use Exception;
 use Illuminate\Support\Facades\Hash;
