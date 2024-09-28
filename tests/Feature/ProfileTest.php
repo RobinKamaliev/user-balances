@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
+use App\User\Models\User;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
