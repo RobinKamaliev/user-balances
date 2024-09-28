@@ -23,15 +23,15 @@ final class WriteBalanceService extends AbstractBalanceService
 
         $operation = $this->createOperation();
 
-        DB::transaction(function () use ($user, $amount, $operation): void {
-            if (($this->balance = $user->firstBalanceLockForUpdate()) && ($this->balance->balance >= $amount)) {
+        DB::transaction(function () use ($operation): void {
+            if (($this->balance = $this->user->firstBalanceLockForUpdate()) && ($this->balance->balance >= $this->amount)) {
                 $this->balanceRepository->write($this->createBalanceDto());
                 $this->successOperation($operation);
             } else {
                 Log::error((new WriteBalanceException())->message, [
-                    'user_id' => $user->id,
+                    'user_id' => $this->user->id,
                     'balance' => $this->balance->balance,
-                    'amount' => $amount,
+                    'amount' => $this->amount,
                     'operation_id' => $operation->id,
                 ]);
 
