@@ -1,0 +1,59 @@
+services:
+    nginx:
+        image: nginx:latest
+        volumes:
+            - ./docker/local/nginx/:/etc/nginx/conf.d/
+            - ./:/var/www/
+        ports:
+            - "8001:80"
+        depends_on:
+            - app
+        container_name: nginx
+
+    app:
+        build:
+            context: .
+            dockerfile: docker/local/app/Dockerfile
+        volumes:
+            - ./:/var/www/
+            - ./docker/local/supervisor/conf.d/:/etc/supervisor/conf.d
+        container_name: app
+        command: /bin/bash -c "service supervisor start && php-fpm"
+        depends_on:
+            - db
+
+    db:
+      image: postgres:15
+      volumes:
+        - ./tmp/db:/var/lib/postgresql/
+      ports:
+        - "5433:5432"
+      environment:
+        - POSTGRES_USER=root
+        - POSTGRES_DB=test
+        - POSTGRES_PASSWORD=root
+      container_name: db
+      depends_on:
+        - redis
+
+    db-testing:
+      image: postgres:15
+      volumes:
+        - ./tmp/db:/var/lib/postgresql/
+      ports:
+        - "5434:5432"
+      environment:
+        - POSTGRES_USER=admin
+        - POSTGRES_DB=test
+        - POSTGRES_PASSWORD=root
+      container_name: db-testing
+      depends_on:
+        - redis
+
+    redis:
+      image: redis:latest
+      volumes:
+        - ./redis/data/:/data
+      ports:
+        - "6379:6379"
+      container_name: redis
