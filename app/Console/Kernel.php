@@ -2,11 +2,20 @@
 
 namespace App\Console;
 
+use App\Console\Commands\BaseCommand;
+use App\Console\Commands\Operation\WriteBalanceCommand;
+use App\Console\Commands\User\CreateUserCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
+    protected $commands = [
+        WriteBalanceCommand::class,
+        CreateUserCommand::class,
+        BaseCommand::class,
+    ];
+
     /**
      * Define the application's command schedule.
      */
