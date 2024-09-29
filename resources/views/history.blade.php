@@ -10,9 +10,13 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="container">
-                        <p>Баланс: <span id="balance">{{ $balance ?? 0 }}</span></p>
-
-                        <h3>Последние 5 операций</h3>
+                        <form method="GET" action="{{ route('dashboard-history') }}">
+                            <div class="mb-3">
+                                <input type="text" name="description" class="form-control dark:text-amber-950"
+                                       placeholder="Поиск по описанию." value="">
+                                <button type="submit" class="btn btn-primary mt-2">Поиск</button>
+                            </div>
+                        </form>
                         <table class="table">
                             <thead>
                             <tr>
@@ -21,7 +25,7 @@
                                 <th>Date</th>
                             </tr>
                             </thead>
-                            <tbody id="operations">
+                            <tbody>
                             @foreach ($operations ?? [] as $operation)
                                 <tr>
                                     <td>{{ $operation->amount }}</td>
@@ -37,4 +41,3 @@
         </div>
     </div>
 </x-app-layout>
-

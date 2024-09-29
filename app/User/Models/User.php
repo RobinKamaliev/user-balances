@@ -47,7 +47,25 @@ class User extends Authenticatable
 
     public function operations(): HasMany
     {
-        return $this->hasMany(Operation::class)->orderByDesc('created_at');
+        return $this->hasMany(Operation::class)
+            ->orderByDesc('created_at');
+    }
+
+    public function operationsByLike(string $query = '', int $limit = 0): Collection
+    {
+        return $this->operations()
+            ->where('description', 'like', "%$query%")
+            ->orderByDesc('created_at')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function lastTakeOperations(int $count): Collection
+    {
+        return $this->operations()
+            ->latest()
+            ->take($count)
+            ->get();
     }
 
     /**
@@ -56,6 +74,8 @@ class User extends Authenticatable
     public function firstBalanceLockForUpdate(): Balance
     {
         /** @var Balance */
-        return $this->balance()->lockForUpdate()->first();
+        return $this->balance()
+            ->lockForUpdate()
+            ->first();
     }
 }
