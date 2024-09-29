@@ -7,7 +7,7 @@ namespace App\Balance\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property $balance
+ * @property numeric $balance
  */
 class Balance extends Model
 {
