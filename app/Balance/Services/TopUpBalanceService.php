@@ -6,11 +6,12 @@ namespace App\Balance\Services;
 
 use App\Balance\Exceptions\TopUpBalanceException;
 use App\User\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
- * Списание баланса.
+ * Пополнение баланса.
  */
 final class TopUpBalanceService extends AbstractBalanceService
 {
@@ -26,18 +27,20 @@ final class TopUpBalanceService extends AbstractBalanceService
 
         $operation = $this->createOperation();
 
-        if ($this->balance = $user->balance) {
+        DB::transaction(function () use ($operation): void {
+            if (!($this->balance = $this->user->firstBalanceLockForUpdate())) {
+                Log::error((new TopUpBalanceException())->message, [
+                    'user_id' => $this->user->id,
+                    'balance' => optional($this->balance)->balance,
+                    'amount' => $this->amount,
+                    'operation_id' => $operation->id,
+                ]);
+
+                throw new TopUpBalanceException();
+            }
+
             $this->balanceRepository->topUp($this->createBalanceDto());
             $this->successOperation($operation);
-        } else {
-            Log::error((new TopUpBalanceException())->message, [
-                'user_id' => $user->id,
-                'balance' => $this->balance->balance,
-                'amount' => $amount,
-                'operation_id' => $operation->id,
-            ]);
-
-            throw new TopUpBalanceException();
-        };
+        });
     }
 }
